@@ -52,8 +52,15 @@ function updateControl() {
     })
 }
 
+export let parentMenuStates = {};
+let eventBound = false;
+
 function resetMenuHandle() {
     let subMenus = document.querySelectorAll("div.menu");
+
+    if (eventBound) return;
+    eventBound = true;
+
     subMenus.forEach(subMenu => {
         if (document.querySelectorAll(".finderbar .left p")[1].innerHTML != subMenu.getAttribute("app")) {
             if (!subMenu.getAttribute("nomatchapp")) {
@@ -61,22 +68,31 @@ function resetMenuHandle() {
                 return;
             }
         }
-        console.log(subMenu);
-        let state = false;
+
         let parentMenu = document.querySelector(`#finderbar p.${subMenu.getAttribute("menu")}`);
-        console.log(parentMenu);
-        parentMenu.addEventListener("click", () => {
-            if (state == false) {
+        const menuKey = `${subMenu.getAttribute("menu")}_${subMenu.getAttribute("app")}`;
+
+        parentMenuStates[menuKey] = false;
+
+        parentMenu.addEventListener("click", function menuClickHandler(e) {
+            e.stopPropagation();
+
+            if (parentMenuStates[menuKey] === false) {
                 subMenu.classList.add("visible");
                 parentMenu.classList.add("active");
                 subMenu.style.left = `${parentMenu.offsetLeft}px`;
                 subMenu.style.top = "25px";
-                state = true;
-                console.log(openingMenu)
-                if (openingMenu != null) {
-                    console.log("openingMenu is avaliable, closing...");
+                parentMenuStates[menuKey] = true;
+
+                if (openingMenu && openingMenu !== subMenu) {
+                    const previousMenuKey = `${openingMenu.getAttribute("menu")}_${openingMenu.getAttribute("app")}`;
                     openingMenu.classList.remove("visible");
+                    parentMenuStates[previousMenuKey] = false;
+
+                    let previousParent = document.querySelector(`#finderbar p.${openingMenu.getAttribute("menu")}`);
+                    if (previousParent) previousParent.classList.remove("active");
                 }
+
                 setTimeout(() => {
                     subMenu.style.transition = "opacity 0.15s ease";
                     openingMenu = subMenu;
@@ -84,11 +100,9 @@ function resetMenuHandle() {
             } else {
                 subMenu.classList.remove("visible");
                 parentMenu.classList.remove("active");
-                state = false;
+                parentMenuStates[menuKey] = false;
+                setTimeout(() => { subMenu.style.transition = "none"; }, 300);
                 openingMenu = null;
-                setTimeout(() => {
-                    subMenu.style.transition = "none";
-                }, 350);
             }
         });
     });
@@ -112,4 +126,4 @@ updateMenu();
 updateControl();
 updateTime();
 setInterval(updateTime, 1000);
-resetMenuHandle();
+window.onload = resetMenuHandle;

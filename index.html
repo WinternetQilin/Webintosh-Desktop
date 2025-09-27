@@ -16,6 +16,7 @@
 </head>
 
 <body class="cursor-default">
+    <div class="wallpaper"></div>
     <header class="finderbar" id="finderbar"></header>
 
     <div class="desktop" id="desktop">
@@ -42,7 +43,7 @@
 
     <!-- Menus -->
     <div class="menu" menu="logo" style="width: 240px;" nomatchapp="yes">
-        <p>关于本机</p>
+        <p onclick="moduleItems.clickMenuItem(this)" cmd="moduleItems.create('./assets/apps/关于本机.html')" target="关于本机">关于本机</p>
         <hr />
         <p>系统设置...</p>
         <p>App Store...</p>
@@ -80,6 +81,19 @@
     <script type="module" src="./src/javascripts/window.js"></script>
     <script type="module" src="./src/javascripts/ui/alert.js"></script>
     <script type="module" src="./src/javascripts/ui/webswift.js"></script>
+    <script type="module" src="./src/javascripts/ui/menu.js"></script>
+    <script type="module" src="./src/javascripts/client.js"></script>
+    <script type="module">
+        import { clickMenuItem } from "./src/javascripts/ui/menu.js";
+        import { parentMenuStates } from "./src/javascripts/finderbar.js";
+        import { create } from "./src/javascripts/window.js";
+
+        window.moduleItems = {
+            clickMenuItem: clickMenuItem,
+            parentMenuStates: parentMenuStates,
+            create: create
+        }
+    </script>
 </body>
 
 </html>
