@@ -14,9 +14,9 @@ function init() {
         container.classList.add("container");
         if (app != "hr") {
             let img = document.createElement("img");
-            img.src = `assets/icons/${app}.svg`;
+            img.src = `/assets/icons/${app}.svg`;
             if (app.endsWith("Folder")) {
-                img.src = "assets/icons/folder.svg";
+                img.src = "/assets/icons/folder.svg";
             }
             container.appendChild(img);
             let light = document.createElement("div");
@@ -31,7 +31,7 @@ function init() {
             });
             img.addEventListener("mouseup", () => {
                 img.style.filter = "brightness(1)";
-                create("assets/apps/"+app+".html", light);
+                create("/assets/apps/"+app+".html", light);
                 light.classList.add("on");
             });
         } else {

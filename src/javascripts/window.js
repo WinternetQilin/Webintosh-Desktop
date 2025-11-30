@@ -17,7 +17,7 @@ export function create(file, light) {
                     document.body.appendChild(script);
                     let link = document.createElement("link");
                     link.rel = "stylesheet";
-                    link.href = `../../assets/stylesheets/apps/${cleanFile}/index.css`;
+                    link.href = `/assets/stylesheets/apps/${cleanFile}/index.css`;
                     document.querySelector("head").appendChild(link);
                 });
         })
