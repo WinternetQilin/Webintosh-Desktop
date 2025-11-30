@@ -47,7 +47,7 @@ export function updateMenu() {
 function updateControl() {
     appControl.forEach((control) => {
         let nowControl = document.createElement("img");
-        nowControl.src = `/assets/images/${control}.svg`;
+        nowControl.src = `./assets/images/${control}.svg`;
         appControlContainer.appendChild(nowControl);
     })
 }

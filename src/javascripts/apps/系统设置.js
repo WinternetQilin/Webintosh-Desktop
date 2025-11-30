@@ -14,7 +14,7 @@ selectionIcons.forEach(icon => {
         scale = icon.getAttribute("scale");
     }
     icon.style.background = `url(${icon.getAttribute("icon")}) center center / ${scale} no-repeat,
-        url(/assets/images/backgrounds/bg.${icon.classList[1]}.svg) center center / cover no-repeat`;
+        url(./assets/images/backgrounds/bg.${icon.classList[1]}.svg) center center / cover no-repeat`;
 });
 
 selections.forEach(selection => {
@@ -23,7 +23,7 @@ selections.forEach(selection => {
         selection.classList.add("focus");
         nowSelection = selection;
 
-        let pageId = selection.querySelector("div").getAttribute("icon").replace("/assets/images/", "").replace("/assets/icons/", "");
+        let pageId = selection.querySelector("div").getAttribute("icon").replace("./assets/images/", "").replace("./assets/icons/", "");
         if (pageId.includes(".svg")) {
             pageId = pageId.replace(".svg", "");
         } else if (pageId.includes(".jpeg")) {
@@ -31,7 +31,7 @@ selections.forEach(selection => {
         } else if (pageId.includes(".png")) {
             pageId = pageId.replace(".png", "");
         } else {
-            createAlert("/assets/icons/访达.svg", "系统设置遇到问题。", "Selection 图标拓展名不支持", "好", "close");
+            createAlert("./assets/icons/访达.svg", "系统设置遇到问题。", "Selection 图标拓展名不支持", "好", "close");
         }
         let nextPage = document.getElementById(pageId);
 

@@ -4,7 +4,7 @@ export function create(file, light) {
     fetch(file)
         .then(response => {
             if (response.status !== 200) {
-                createAlert("/assets/icons/访达.svg", "加载 App 时遇到错误", `服务器返回状态码: ${response.status}`, "好", "close");
+                createAlert("./assets/icons/访达.svg", "加载 App 时遇到错误", `服务器返回状态码: ${response.status}`, "好", "close");
                 return;
             }
             response.text()
@@ -17,7 +17,7 @@ export function create(file, light) {
                     document.body.appendChild(script);
                     let link = document.createElement("link");
                     link.rel = "stylesheet";
-                    link.href = `/assets/stylesheets/apps/${cleanFile}/index.css`;
+                    link.href = `./assets/stylesheets/apps/${cleanFile}/index.css`;
                     document.querySelector("head").appendChild(link);
                 });
         })

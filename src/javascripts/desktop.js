@@ -40,7 +40,7 @@ function getThumb(file) {
                 video.currentTime = 0.1
             }
         } else {
-            resolve("/assets/images/GenericDocumentIcon.png")
+            resolve("./assets/images/GenericDocumentIcon.png")
         }
     })
 }
@@ -48,7 +48,7 @@ function getThumb(file) {
 function getIcon(file, callback) {
     file.file((file) => {
         console.log(file.type);
-        let src = "/assets/images/GenericDocumentIcon.png";
+        let src = "./assets/images/GenericDocumentIcon.png";
         getThumb(file).then((url) => {
             src = url
             callback(url)
@@ -95,7 +95,7 @@ function addFolder(folder) {
         let item = document.createElement("div");
         item.classList.add("item");
         let icon = document.createElement("img");
-        icon.src = "/assets/images/Folder.png";
+        icon.src = "./assets/images/Folder.png";
         let name = document.createElement("p");
         name.innerHTML = folder.name;
         item.appendChild(icon);
@@ -107,7 +107,7 @@ function addFolder(folder) {
         let item = document.createElement("div");
         item.classList.add("item");
         let icon = document.createElement("img");
-        icon.src = "/assets/images/Folder.png";
+        icon.src = "./assets/images/Folder.png";
         let name = document.createElement("p");
         name.innerHTML = folder.name;
         item.appendChild(icon);
