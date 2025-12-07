@@ -1,3 +1,4 @@
+import { updateMenu } from "./finderbar.js";
 import { create } from "./window.js";
 
 const defaultApps = [
@@ -36,7 +37,8 @@ function init() {
                     img.classList.remove("opening");
                     light.classList.add("on");
                     create("./assets/apps/"+app+".html", light);
-                }, 2400);
+                    updateMenu(app);
+                }, 2980);
             });
         } else {
             let hr = document.createElement("hr");

@@ -8,7 +8,6 @@ const containers = document.querySelectorAll(".desktop .container");
 containers.forEach((container) => {
     containerList.push(container);
 })
-console.log(containerList);
 
 function getThumb(file) {
     return new Promise(resolve => {

@@ -1,7 +1,7 @@
 .about_this_mac {
     width: 280px;
     height: 515px;
-    background: #fff5;
+    background: #fff7;
     backdrop-filter: blur(40px) saturate(1.2);
     position: absolute;
     top: calc(50% - 257.5px);
@@ -114,5 +114,9 @@
         background: rgba(0, 0, 0, 0.1);
         border: solid 0.5px rgba(0, 0, 0, 0.2);
         margin-right: 8px;
+    }
+
+    div:not(.gray):active {
+        filter: brightness(0.85);
     }
 }

@@ -5,6 +5,7 @@ export let appMenu = {
 let appControl = [
     "switch.2", "magnifyingglass", "wifi"
 ]
+let tempMenuElements = [];
 
 export const finderbar = document.getElementById("finderbar");
 
@@ -34,15 +35,25 @@ appControlContainer.appendChild(timeControl);
 let openingMenu = null;
 
 export function updateMenu(app) {
+    tempMenuElements.forEach(ele => {
+        ele.parentNode.removeChild(ele);
+    });
+    tempMenuElements = [];
     let appMenuElement = document.createElement("p");
     appMenuElement.innerHTML = app;
     appMenuElement.classList.add("appname");
     appMenuContainer.appendChild(appMenuElement);
+    tempMenuElements.push(appMenuElement);
+    if (!appMenu[app]) {
+        updateMenu("访达");
+        return;
+    }
     appMenu[app].forEach((menu, index) => {
         let nowMenu = document.createElement("p");
         index = index + 1;
         nowMenu.innerHTML = menu;
         appMenuContainer.appendChild(nowMenu);
+        tempMenuElements.push(nowMenu);
     });
     resetMenuHandle();
 }

@@ -1,6 +1,6 @@
 import { createAlert } from '../ui/alert.js';
 
-let window_settings = document.querySelector(".window[settings]");
+let window_settings = document.querySelector(".window.settings");
 let selectionIcons = document.querySelectorAll(".left .list .selection div.icon");
 let selections = document.querySelectorAll(".left .list .selection");
 let rightTitle = document.querySelector(".right .toolbar p");
@@ -42,11 +42,3 @@ selections.forEach(selection => {
         rightTitle.textContent = selection.querySelector("p:not(.title)").textContent;
     });
 });
-
-function close_window(light) {
-    window_settings.style.display = "none";
-    setTimeout(() => {
-        document.body.removeChild(window);
-    }, 50);
-    light.classList.remove("on");
-}

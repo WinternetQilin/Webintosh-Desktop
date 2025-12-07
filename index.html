@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./assets/stylesheets/dock/dock.css" />
     <link rel="stylesheet" href="./assets/stylesheets/main/desktop.css" />
     <link rel="stylesheet" href="./assets/stylesheets/cursor/cursor.css" />
-    <!-- <link rel="stylesheet" href="../assets/stylesheets/ui/window.css" /> -->
+    <!-- <link rel="stylesheet" href="../assets/stylesheets/apps/main/window.css" /> -->
     <link rel="stylesheet" href="./assets/stylesheets/ui/ui.css">
 </head>
 
@@ -85,14 +85,15 @@
     <script type="module" src="./src/javascripts/client.js"></script>
     <script type="module">
         import { clickMenuItem } from "./src/javascripts/ui/menu.js";
-        import { parentMenuStates } from "./src/javascripts/finderbar.js";
+        import { parentMenuStates, updateMenu } from "./src/javascripts/finderbar.js";
         import { create, resetWindowListeners } from "./src/javascripts/window.js";
 
         window.moduleItems = {
             clickMenuItem: clickMenuItem,
             parentMenuStates: parentMenuStates,
             create: create,
-            resetWindowListeners: resetWindowListeners
+            resetWindowListeners: resetWindowListeners,
+            updateMenu: updateMenu
         }
     </script>
 </body>

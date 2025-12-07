@@ -2,17 +2,17 @@ import { createAlert } from "./ui/alert.js";
 
 let fd = document.querySelector(".finderbar")
 
-export function create(file, light) {
+export function create(file, light=null) {
     fetch(file)
         .then(response => {
             if (response.status !== 200) {
-                createAlert("./assets/icons/访达.svg", "加载 App 时遇到错误", `服务器返回状态码: ${response.status}`, "好", "close");
+                createAlert("./assets/icons/访达.svg", "加载 App 时遇到错误", `此 App 仍在开发中<br/>服务器返回状态码: ${response.status}`, "好", "close");
                 return;
             }
             response.text()
                 .then((content) => {
                     let cleanFile = file.split("/").pop().split(".")[0];
-                    document.body.innerHTML += content;
+                    document.body.insertAdjacentHTML("beforeend", content);
                     let script = document.createElement("script");
                     script.src = `./src/javascripts/apps/${cleanFile}.js`;
                     script.type = "module";
@@ -27,27 +27,25 @@ export function create(file, light) {
             console.error('Error opening app:', error);
         });
     setTimeout(() => {
-        fd.style.height = "24px";
-        if (Array.from(fd.classList).includes("macbook")) {
-            fd.style.height = "35px";
-        }
         resetWindowListeners(light);
     }, 150);
 }
 
-export function resetWindowListeners(light) {
+export function resetWindowListeners(light=null) {
     let windows = document.querySelectorAll(".window");
     windows.forEach(win => {
         let closeBtn = win.querySelector(".wintools .red");
-        let miniBtn = win.querySelector(".wintools .yellow");
-        let zoomBtn = win.querySelector(".wintools .green");
+        let miniBtn = win.querySelector(".wintools .yellow") || win.querySelectorAll(".wintools .gray")[0];
+        let zoomBtn = win.querySelector(".wintools .green") || win.querySelectorAll(".wintools .gray")[1];
 
         const closeWindow = () => {
             win.remove();
-            light.classList.remove("on");
+            if (light) light.classList.remove("on");
         };
 
         win._closeWindow = closeWindow;
+
+        addWindowDrag(win);
 
         closeBtn.addEventListener("click", () => {
             closeWindow();
@@ -58,8 +56,6 @@ export function resetWindowListeners(light) {
         zoomBtn.addEventListener("click", () => {
             console.log("Clicked maximize");
         });
-
-        addWindowDrag(win);
     });
 }
 
