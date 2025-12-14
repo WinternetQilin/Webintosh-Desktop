@@ -3,8 +3,17 @@ import { updateMenu } from "./finderbar.js";
 
 let fd = document.querySelector(".finderbar")
 let zIndex = 5;
+window.specialCloses = {};
 
 export function create(file, name, light = null) {
+    const cleanFile = file.split("/").pop().split(".")[0];
+    if (!name) name = cleanFile;
+    const existing = document.getElementById(name);
+    if (existing) {
+        bringToFront(existing, name);
+        return;
+    }
+
     fetch(file)
         .then(response => {
             if (response.status !== 200) {
@@ -13,11 +22,16 @@ export function create(file, name, light = null) {
             }
             response.text()
                 .then((content) => {
-                    let cleanFile = file.split("/").pop().split(".")[0];
                     document.body.insertAdjacentHTML("beforeend", content);
+                    const wins = document.querySelectorAll('.window');
+                    if (wins.length) {
+                        const newWin = wins[wins.length - 1];
+                        if (newWin && !newWin.id) newWin.id = name;
+                    }
                     let script = document.createElement("script");
-                    script.src = `./src/javascripts/apps/${cleanFile}.js`;
+                    script.src = `./src/javascripts/apps/${cleanFile}.js?v=${Date.now()}`;
                     script.type = "module";
+                    script.setAttribute("app", cleanFile);
                     document.body.appendChild(script);
                     let link = document.createElement("link");
                     link.rel = "stylesheet";
@@ -42,6 +56,8 @@ export function resetWindowListeners(name, light = null) {
 
         const closeWindow = () => {
             win.remove();
+            const s = document.querySelector(`script[app="${name}"]`);
+            if (s) s.remove();
             if (light) light.classList.remove("on");
         };
 
@@ -83,7 +99,7 @@ function addWindowDrag(windowElement, name) {
         offsetX = e.clientX - windowElement.getBoundingClientRect().left;
         offsetY = e.clientY - windowElement.getBoundingClientRect().top;
 
-        bringToFront(windowElement);
+        bringToFront(windowElement, name);
         e.preventDefault();
     });
 
@@ -107,7 +123,8 @@ function addWindowDrag(windowElement, name) {
     updateMenu(name);
 }
 
-function bringToFront(windowElement) {
+export function bringToFront(windowElement, name) {
     zIndex += 1;
     windowElement.style.zIndex = zIndex;
+    updateMenu(name);
 }

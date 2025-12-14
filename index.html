@@ -45,7 +45,24 @@
     <div class="menu" menu="logo" style="width: 240px;" nomatchapp="yes">
         <p onclick="moduleItems.clickMenuItem(this)" cmd="moduleItems.create('./assets/apps/关于本机.html')" target="关于本机">关于本机</p>
         <hr />
-        <p onclick="">系统设置...</p>
+        <p onclick="moduleItems.clickMenuItem(this)" cmd="moduleItems.create('./assets/apps/系统设置.html')" target="系统设置">系统设置...</p>
+        <p>App Store...</p>
+        <hr />
+        <p>最近使用的项目</p>
+        <hr />
+        <p>强制退出...</p>
+        <hr />
+        <p>睡眠</p>
+        <p>重新启动...</p>
+        <p>关机...</p>
+        <hr />
+        <p>锁定屏幕</p>
+        <p>退出登录 “CodeCrafter-TL”...</p><!--我去找ai给我写个css计算器why AI写的不行 你等会我创建一个新文件好吧确实不行go to /calc.html--->
+    </div>
+    <div class="menu" menu="appname" nomatchapp="yes">
+        <p>访达</p>
+        <hr />
+        <p>设置...</p>
         <p>App Store...</p>
         <hr />
         <p>最近使用的项目</p>
@@ -59,19 +76,6 @@
         <p>锁定屏幕</p>
         <p>退出登录 “CodeCrafter-TL”...</p>
     </div>
-    <!-- <div class="menu" menu="appname" app="访达">
-        <p>关于访达</p>
-        <hr />
-        <p>设置...</p>
-        <hr />
-        <p>清倒废纸篓...</p>
-        <hr />
-        <p>服务</p>
-        <hr />
-        <p>隐藏访达</p>
-        <p>隐藏其他</p>
-        <p disabled>全部显示</p>
-    </div> -->
 
     <script type="module" src="./src/javascripts/main.js"></script>
     <script type="module" src="./src/javascripts/finderbar.js"></script>

@@ -1,6 +1,8 @@
 export let appMenu = {
     "访达": ["文件", "编辑", "显示", "前往", "窗口", "帮助"],
-    "系统设置": ["编辑", "显示", "窗口", "帮助"]
+    "系统设置": ["编辑", "显示", "窗口", "帮助"],
+    "计算器": ["编辑", "显示", "窗口", "帮助"],
+    "Safari浏览器": ["文件", "编辑", "显示", "历史记录", "书签", "窗口", "帮助"],
 };
 let appControl = [
     "switch.2", "magnifyingglass", "wifi"
@@ -25,16 +27,20 @@ appMenuContainer.appendChild(logoMenu);
 const timeControl = document.createElement("p");
 timeControl.classList.add("time");
 // timeControl.innerHTML = "4月12日 周六 18:26";
-timeControl.innerHTML = "9月14日 周日";
+timeControl.innerHTML = "13:20";
 const dateControl = document.createElement("p");
 dateControl.classList.add("date");
-dateControl.innerHTML = "13:20";
-appControlContainer.appendChild(dateControl);
+dateControl.innerHTML = "9月14日 周日";
+
 appControlContainer.appendChild(timeControl);
+appControlContainer.appendChild(dateControl);
 
 let openingMenu = null;
 
 export function updateMenu(app) {
+    if (!appMenu[app]) {
+        return;
+    }
     tempMenuElements.forEach(ele => {
         ele.parentNode.removeChild(ele);
     });
@@ -44,10 +50,6 @@ export function updateMenu(app) {
     appMenuElement.classList.add("appname");
     appMenuContainer.appendChild(appMenuElement);
     tempMenuElements.push(appMenuElement);
-    if (!appMenu[app]) {
-        updateMenu("访达");
-        return;
-    }
     appMenu[app].forEach((menu, index) => {
         let nowMenu = document.createElement("p");
         index = index + 1;
@@ -132,8 +134,8 @@ function updateTime() {
     let weekDay = days[currentDateTime.getDay()];
     day = day.toString();
     month = month.toString();
-    timeControl.innerHTML = `${month} 月 ${day} 日 ${weekDay}`;
-    dateControl.innerHTML = `${hours}：${minutes}`;
+    dateControl.innerHTML = `${month} 月 ${day} 日 ${weekDay}`;
+    timeControl.innerHTML = `${hours}：${minutes}`;
 }
 
 updateMenu("访达");

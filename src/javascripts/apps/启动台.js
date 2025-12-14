@@ -1,3 +1,5 @@
+import { create } from "../window.js";
+
 let apps = [
     "App Store", "Safari浏览器", "邮件", "通讯录", "日历", "提醒事项", "备忘录",
     "FaceTime通话", "信息", "地图", "查找", "Photo Booth", "照片", "音乐",
@@ -5,7 +7,10 @@ let apps = [
     "计算器", "无边记", "家庭", "Siri", "iPhone镜像", "密码", "系统设置",
     "其他"
 ];
-const containers = document.querySelector(".launchpad .containers");
+const launchpad = document.querySelector(".launchpad");
+const bg = launchpad.querySelector(".bg");
+const containers = launchpad.querySelector(".containers");
+const imgs = containers.querySelectorAll(".container img");
 
 function init() {
     apps.forEach(app => {
@@ -23,8 +28,33 @@ function init() {
         div.appendChild(img);
         div.appendChild(p);
         containers.appendChild(div);
+
+        img.addEventListener("click", () => {
+            create("./assets/apps/"+app+".html", app);
+            closeLaunchpad();
+        });
     });
+
+    window.appStatus["启动台"] = true;
+    window.specialCloses["启动台"] = closeLaunchpad;
 }
 
-init();
-//666 依旧逆天码字速度
+function closeLaunchpad() {
+    bg.style.animation = "forwards";
+    containers.style.animation = "forwards";
+    setTimeout(() => {
+        bg.style.animation = "fade 0.35s ease-out forwards reverse";
+        containers.style.animation = "animation 0.4s ease-in-out forwards reverse";
+        setTimeout(() => {
+            document.querySelector("script[app=启动台]").remove();
+            launchpad.remove();
+            window.appStatus["启动台"] = false;
+        }, 400);
+    }, 20);
+}
+launchpad.addEventListener("click", (event) => {
+    if (!Array.from(imgs).includes(event.target))
+        closeLaunchpad();
+});
+
+init();  

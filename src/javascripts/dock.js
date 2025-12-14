@@ -1,5 +1,7 @@
 import { updateMenu } from "./finderbar.js";
-import { create } from "./window.js";
+import { create, bringToFront } from "./window.js";
+
+const tip = document.querySelector("body > div.tip");
 
 const defaultApps = [
     "访达", "启动台", "Safari浏览器", "信息", "邮件", "地图", "照片", "FaceTime通话",
@@ -8,13 +10,23 @@ const defaultApps = [
 ];
 let noAnimation = [
     "启动台",
-    "访达"
-]
+    "访达",
+    // "系统设置" 
+];
 let noMenuChanging = [
     "启动台"
-]
+];
+let doClose = [
+    "启动台"
+];
+let appStatus = {
+    "访达": true
+};
+
+window.appStatus = appStatus;
 
 export const dock = document.getElementById("dock");
+const imgs = dock.querySelectorAll(".container img");
 
 function init() {
     defaultApps.forEach((app, index) => {
@@ -36,19 +48,31 @@ function init() {
             container.appendChild(light);
 
             img.addEventListener("mouseup", () => {
-                if (!noAnimation.includes(img.alt)) {
-                    img.classList.add("opening");
-                    setTimeout(() => {
-                        img.classList.remove("opening");
-                        light.classList.add("on");
+                    if (appStatus[img.alt] == true) {
+                    if (!doClose.includes(img.alt)) {
+                        bringToFront(document.getElementById(img.alt), img.alt);
+                    } else {
+                        window.specialCloses[img.alt]();
+                        light.classList.remove("on");
+                    }
+                } else {
+                    if (!noAnimation.includes(img.alt)) {
+                        img.classList.add("opening");
+                        setTimeout(() => {
+                            img.classList.remove("opening");
+                            light.classList.add("on");
+                            create("./assets/apps/"+app+".html", img.alt, light);
+                            appStatus[img.alt] = true;
+                            if (!noMenuChanging.includes(img.alt))
+                                updateMenu(app);
+                        }, 2980);
+                    } else {
                         create("./assets/apps/"+app+".html", img.alt, light);
+                        appStatus[img.alt] = true;
+                        // light.classList.add("on");
                         if (!noMenuChanging.includes(img.alt))
                             updateMenu(app);
-                    }, 2980);
-                } else {
-                    create("./assets/apps/"+app+".html");
-                    if (!noMenuChanging.includes(img.alt))
-                        updateMenu(app);
+                    }
                 }
             });
         } else {
@@ -59,11 +83,22 @@ function init() {
     })
 }
 
+function tipSetup() {
+    imgs.forEach(img => {
+        img.addEventListener("mouseover", () => {
+            tip.style.display = "block";
+        });
+        img.addEventListener("mouseout", () => {
+            tip.style.display = "none";
+        });
+    });
+}
+
 function DockAnimation(){
     const baseWidth = 50;
     const mouseRange = 200;
     const maxScale = 1.8;
-    const lerpSpeed = 0.5;
+    const lerpSpeed = 0.3;
     const images = dock.querySelectorAll(".container img");
 
     images.forEach(img => {
@@ -109,3 +144,4 @@ function DockAnimation(){
 
 init();
 DockAnimation();
+setTimeout(tipSetup, 500);

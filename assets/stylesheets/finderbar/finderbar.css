@@ -80,16 +80,16 @@
   width: auto;
   height: 18px;
 }
-.finderbar .right .time {
+.finderbar .right .date {
   margin-left: 7px;
-  margin-right: 8px;
+  margin-right: 7px;
   font-size: 13.5px;
   letter-spacing: -0.2px;
   font-family: "SFPro-Medium", "PingFangSC-Medium";
   line-height: 16px;
 }
-.finderbar .right .date {
-  margin-right: 19px;
+.finderbar .right .time {
+  margin-right: 17px;
   font-size: 13.5px;
   letter-spacing: -0.2px;
   line-height: 16px;

@@ -13,6 +13,7 @@ function clientCheck() {
         document.body.appendChild(overlay);
         document.body.style.overflow = "hidden";
         createAlert("./assets/icons/访达.svg", "客户端不兼容", "请使用电脑端访问 Webintosh", "好", "closepage", true);
+        document.querySelector(".dock").style.display = "none";
     }
 }
 
