@@ -16,6 +16,16 @@
     }
 }
 
+@keyframes come {
+    0% {
+        transform: translateY(80px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .tip {
     /* display: inline-block; */
     width: auto;
@@ -62,6 +72,9 @@
     z-index: 2049;
     backdrop-filter: blur(50px) saturate(1.8);
     background: rgba(246, 246, 246, 0.46);
+    transform: translateY(80px);
+    animation: come 0.7s ease forwards;
+    animation-delay: 0.2s;
 
     .container {
         display: inline-flex;
