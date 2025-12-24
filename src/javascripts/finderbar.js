@@ -71,62 +71,64 @@ function updateControl() {
 }
 
 export let parentMenuStates = {};
-let eventBound = false;
+
+export function closeAllMenus() {
+    let subMenus = document.querySelectorAll("div.menu:not(.contextmenu)");
+    subMenus.forEach(subMenu => {
+        subMenu.classList.remove("visible");
+        const menuKey = `${subMenu.getAttribute("menu")}_${subMenu.getAttribute("app")}`;
+        parentMenuStates[menuKey] = false;
+        setTimeout(() => { subMenu.style.transition = "none"; }, 300);
+    });
+    document.querySelectorAll("#finderbar p.active").forEach(p => p.classList.remove("active"));
+    openingMenu = null;
+}
 
 function resetMenuHandle() {
     let subMenus = document.querySelectorAll("div.menu:not(.contextmenu)");
 
-    if (eventBound) return;
-    eventBound = true;
-
     subMenus.forEach(subMenu => {
         if (document.querySelectorAll(".finderbar .left p")[1].innerHTML != subMenu.getAttribute("app")) {
             if (!subMenu.getAttribute("nomatchapp")) {
-                console.log(subMenu.getAttribute("app"), "Not match");
                 return;
             }
         }
 
         let parentMenu = document.querySelector(`#finderbar p.${subMenu.getAttribute("menu")}`);
+        if (!parentMenu) return;
+
         const menuKey = `${subMenu.getAttribute("menu")}_${subMenu.getAttribute("app")}`;
-
         parentMenuStates[menuKey] = false;
-
-        parentMenu.addEventListener("click", function menuClickHandler(e) {
+        const newHandler = function (e) {
             e.stopPropagation();
 
             if (parentMenuStates[menuKey] === false) {
+                if (openingMenu && openingMenu !== subMenu) {
+                    closeAllMenus();
+                }
+
                 subMenu.classList.add("visible");
                 parentMenu.classList.add("active");
                 subMenu.style.left = `${parentMenu.offsetLeft}px`;
                 subMenu.style.top = "25px";
                 parentMenuStates[menuKey] = true;
-                subMenu.style.zIndex = zIndex + 1;
-                zIndex += 1;
-
-                if (openingMenu && openingMenu !== subMenu) {
-                    const previousMenuKey = `${openingMenu.getAttribute("menu")}_${openingMenu.getAttribute("app")}`;
-                    openingMenu.classList.remove("visible");
-                    parentMenuStates[previousMenuKey] = false;
-
-                    let previousParent = document.querySelector(`#finderbar p.${openingMenu.getAttribute("menu")}`);
-                    if (previousParent) previousParent.classList.remove("active");
-                }
 
                 setTimeout(() => {
                     subMenu.style.transition = "opacity 0.15s ease";
                     openingMenu = subMenu;
                 }, 50);
             } else {
-                subMenu.classList.remove("visible");
-                parentMenu.classList.remove("active");
-                parentMenuStates[menuKey] = false;
-                setTimeout(() => { subMenu.style.transition = "none"; }, 300);
-                openingMenu = null;
+                closeAllMenus();
             }
-        });
+        };
+
+        parentMenu.onclick = newHandler;
     });
 }
+
+document.addEventListener("click", () => {
+    closeAllMenus();
+});
 
 function updateTime() {
     const currentDateTime = new Date();

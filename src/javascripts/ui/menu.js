@@ -1,15 +1,31 @@
-import { parentMenuStates } from "../finderbar.js";
-import { zIndex } from "../window.js";
+import { closeAllMenus } from "../finderbar.js";
 
 export function clickMenuItem(item) {
+    if (item.hasAttribute("disabled")) return;
+
     let cmd = item.getAttribute("cmd");
-    let parentMenu = item.parentNode;
-    let activeMenu = document.querySelector(`#finderbar p.${parentMenu.getAttribute("menu")}`);
-    parentMenuStates[activeMenu] = false;
-    parentMenu.classList.remove("visible");
-    activeMenu.classList.remove("active");
-    let func = new Function(cmd);
-    func();
-    // parentMenu.style.zIndex = zIndex + 1;
-    // zIndex += 1;
+
+    let flashCount = 0;
+    const maxFlashes = 3;
+    const flashInterval = 60;
+
+    const flash = () => {
+        if (flashCount < maxFlashes * 2) {
+            if (flashCount % 2 === 0) {
+                item.classList.add("clicked");
+            } else {
+                item.classList.remove("clicked");
+            }
+            flashCount++;
+            setTimeout(flash, flashInterval);
+        } else {
+            closeAllMenus();
+            if (cmd) {
+                let func = new Function(cmd);
+                func();
+            }
+        }
+    };
+
+    flash();
 }
