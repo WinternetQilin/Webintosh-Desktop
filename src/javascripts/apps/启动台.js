@@ -1,4 +1,6 @@
 import { create } from "../window.js";
+import { updateMenu } from "../finderbar.js";
+import { addToDock } from "../dock.js";
 
 let apps = [
     "App Store", "Safari浏览器", "邮件", "通讯录", "日历", "提醒事项", "备忘录",
@@ -30,7 +32,39 @@ function init() {
         containers.appendChild(div);
 
         img.addEventListener("click", () => {
-            create("./assets/apps/" + app + ".html", app, null, app === "计算器");
+            if (window.appStatus[app]) {
+                create("./assets/apps/" + app + ".html", app, null, app === "计算器");
+            } else {
+                if (!["启动台", "访达"].includes(app)) {
+                    // Try to get dockImg first
+                    let dockImg = document.querySelector(`#dock img[alt="${app}"]`);
+                    if (!dockImg) {
+                        addToDock(app);
+                        dockImg = document.querySelector(`#dock img[alt="${app}"]`);
+                    }
+
+                    if (dockImg) {
+                        dockImg.classList.add("opening");
+                        setTimeout(() => {
+                            dockImg.classList.remove("opening");
+                            const light = dockImg.parentElement.querySelector(".light");
+                            if (light) light.classList.add("on");
+                            create("./assets/apps/" + app + ".html", app, light, app === "计算器");
+                            window.appStatus[app] = true;
+                            updateMenu(app);
+                        }, 2980);
+                    } else {
+                        // Fallback just in case
+                        create("./assets/apps/" + app + ".html", app, null, app === "计算器");
+                        window.appStatus[app] = true;
+                        updateMenu(app);
+                    }
+                } else {
+                    create("./assets/apps/" + app + ".html", app, null, app === "计算器");
+                    window.appStatus[app] = true;
+                    if (app !== "启动台") updateMenu(app);
+                }
+            }
             closeLaunchpad();
         });
     });

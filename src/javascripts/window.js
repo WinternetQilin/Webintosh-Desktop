@@ -73,6 +73,7 @@ export function resetWindowListeners(name, light = null) {
             const s = document.querySelector(`script[app="${name}"]`);
             if (s) s.remove();
             if (light) light.classList.remove("on");
+            if (window.appStatus) window.appStatus[name] = false;
         };
 
         win._closeWindow = closeWindow;

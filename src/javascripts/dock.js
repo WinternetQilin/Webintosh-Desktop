@@ -19,6 +19,111 @@ let dockZoom = localStorage.getItem("dock-zoom") === "off" ? false : true;
 let hideTimer = null;
 const DOCK_TRANSITION = "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)";
 let dock_zoom = false;
+let currentImg = null;
+
+function bindClickEvent(img, light, app) {
+    img.addEventListener("mouseup", () => {
+        if (appStatus[img.alt] == true) {
+            if (!doClose.includes(img.alt)) {
+                bringToFront(document.getElementById(img.alt), img.alt);
+            } else {
+                window.specialCloses[img.alt]();
+                light.classList.remove("on");
+            }
+        } else {
+            if (!noAnimation.includes(img.alt)) {
+                img.classList.add("opening");
+                setTimeout(() => {
+                    img.classList.remove("opening");
+                    light.classList.add("on");
+                    create("./assets/apps/" + app + ".html", img.alt, light, app === "计算器");
+                    appStatus[img.alt] = true;
+                    if (!noMenuChanging.includes(img.alt))
+                        updateMenu(app);
+                }, 2980);
+            } else {
+                create("./assets/apps/" + app + ".html", img.alt, light, app === "计算器");
+                appStatus[img.alt] = true;
+                if (!noMenuChanging.includes(img.alt))
+                    updateMenu(app);
+            }
+        }
+    });
+}
+
+function updateTipPosition() {
+    if (currentImg && tip && !dock.classList.contains("hidden")) {
+        const rect = currentImg.getBoundingClientRect();
+        const tipWidth = tip.offsetWidth;
+        tip.style.left = rect.left + rect.width / 2 - tipWidth / 2 + 'px';
+        tip.style.top = rect.top - 40 + 'px';
+        requestAnimationFrame(updateTipPosition);
+    }
+};
+
+function bindTipEvent(img) {
+    img.addEventListener("mouseover", () => {
+        if (tip && !dock.classList.contains("hidden")) {
+            currentImg = img;
+            tip.textContent = img.alt;
+            tip.style.display = "block";
+            tip.style.visibility = "hidden";
+            requestAnimationFrame(() => {
+                tip.style.visibility = "visible";
+                updateTipPosition();
+            });
+
+            const rect = img.getBoundingClientRect();
+
+            if (!dock_zoom) {
+                tip.style.left = rect.left + rect.width / 2 - tip.offsetWidth / 2 + 'px';
+                tip.style.top = "616px";
+            } else {
+                tip.style.left = rect.left + rect.width / 2 - tip.offsetWidth / 2 + 'px';
+                tip.style.top = "580px";
+            }
+        }
+    });
+
+    img.addEventListener("mouseout", () => {
+        currentImg = null;
+        if (tip) {
+            tip.style.display = "none";
+            tip.style.visibility = "visible";
+        }
+    });
+}
+
+export function addToDock(app) {
+    if (document.querySelector(`#dock img[alt="${app}"]`)) return;
+
+    let container = document.createElement("div");
+    container.classList.add("container");
+
+    let img = document.createElement("img");
+    img.src = `./assets/icons/${app}.svg`;
+    img.alt = app;
+    container.appendChild(img);
+
+    let light = document.createElement("div");
+    light.classList.add("light");
+    container.appendChild(light);
+
+    bindClickEvent(img, light, app);
+    bindTipEvent(img);
+
+    const hr = dock.querySelector(".container hr");
+    if (hr) {
+        // hr is usually inside a container div, so we insert after that container
+        const hrContainer = hr.parentElement;
+        dock.insertBefore(container, hrContainer.nextSibling);
+    } else {
+        dock.appendChild(container);
+    }
+
+    // Update imgs list for animation
+    imgs = dock.querySelectorAll(".container img");
+}
 
 function init() {
     defaultApps.forEach((app, index) => {
@@ -39,33 +144,7 @@ function init() {
                 light.classList.add("on");
             }
             container.appendChild(light);
-            img.addEventListener("mouseup", () => {
-                if (appStatus[img.alt] == true) {
-                    if (!doClose.includes(img.alt)) {
-                        bringToFront(document.getElementById(img.alt), img.alt);
-                    } else {
-                        window.specialCloses[img.alt]();
-                        light.classList.remove("on");
-                    }
-                } else {
-                    if (!noAnimation.includes(img.alt)) {
-                        img.classList.add("opening");
-                        setTimeout(() => {
-                            img.classList.remove("opening");
-                            light.classList.add("on");
-                            create("./assets/apps/" + app + ".html", img.alt, light, app === "计算器");
-                            appStatus[img.alt] = true;
-                            if (!noMenuChanging.includes(img.alt))
-                                updateMenu(app);
-                        }, 2980);
-                    } else {
-                        create("./assets/apps/" + app + ".html", img.alt, light, app === "计算器");
-                        appStatus[img.alt] = true;
-                        if (!noMenuChanging.includes(img.alt))
-                            updateMenu(app);
-                    }
-                }
-            });
+            bindClickEvent(img, light, app);
         } else {
             let hr = document.createElement("hr");
             container.appendChild(hr);
@@ -151,47 +230,8 @@ function updateDockVisibility() {
 }
 
 function tipSetup() {
-    let currentImg = null;
-    let updateTipPosition = () => {
-        if (currentImg && tip && !dock.classList.contains("hidden")) {
-            const rect = currentImg.getBoundingClientRect();
-            const tipWidth = tip.offsetWidth;
-            tip.style.left = rect.left + rect.width / 2 - tipWidth / 2 + 'px';
-            tip.style.top = rect.top - 40 + 'px';
-            requestAnimationFrame(updateTipPosition);
-        }
-    };
     imgs.forEach(img => {
-        img.addEventListener("mouseover", () => {
-            if (tip && !dock.classList.contains("hidden")) {
-                currentImg = img;
-                tip.textContent = img.alt;
-                tip.style.display = "block";
-                tip.style.visibility = "hidden";
-                requestAnimationFrame(() => {
-                    tip.style.visibility = "visible";
-                    updateTipPosition();
-                });
-
-                const rect = img.getBoundingClientRect();
-
-                if (!dock_zoom) {
-                    tip.style.left = rect.left + rect.width / 2 - tip.offsetWidth / 2 + 'px';
-                    tip.style.top = "616px";
-                } else {
-                    tip.style.left = rect.left + rect.width / 2 - tip.offsetWidth / 2 + 'px';
-                    tip.style.top = "580px";
-                }
-            }
-        });
-
-        img.addEventListener("mouseout", () => {
-            currentImg = null;
-            if (tip) {
-                tip.style.display = "none";
-                tip.style.visibility = "visible";
-            }
-        });
+        bindTipEvent(img);
     });
 }
 
