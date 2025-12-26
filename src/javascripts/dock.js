@@ -115,8 +115,13 @@ export function addToDock(app) {
     const hr = dock.querySelector(".container hr");
     if (hr) {
         // hr is usually inside a container div, so we insert after that container
+        // omg, i didn't know that before
         const hrContainer = hr.parentElement;
+        let hrNextContainer = document.createElement("div");
+        hrNextContainer.classList.add("container");
+        hrNextContainer.appendChild(document.createElement("hr"));
         dock.insertBefore(container, hrContainer.nextSibling);
+        dock.insertBefore(hrNextContainer, container.nextSibling)
     } else {
         dock.appendChild(container);
     }

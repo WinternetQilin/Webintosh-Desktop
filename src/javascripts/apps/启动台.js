@@ -44,9 +44,9 @@ function init() {
                     }
 
                     if (dockImg) {
-                        dockImg.classList.add("opening");
+                        dockImg.classList.add("openingwithscale");
                         setTimeout(() => {
-                            dockImg.classList.remove("opening");
+                            dockImg.classList.remove("openingwithscale");
                             const light = dockImg.parentElement.querySelector(".light");
                             if (light) light.classList.add("on");
                             create("./assets/apps/" + app + ".html", app, light, app === "计算器");
