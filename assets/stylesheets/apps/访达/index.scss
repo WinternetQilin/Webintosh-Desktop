@@ -121,6 +121,7 @@
                 img {
                     width: 10px;
                     opacity: 0.5;
+                    filter: invert(1);
                 }
             }
 
@@ -128,7 +129,7 @@
                 font-weight: 600;
                 font-size: 14px;
                 flex: 1;
-                text-align: center;
+                // text-align: center;
                 margin-right: 60px;
             }
         }

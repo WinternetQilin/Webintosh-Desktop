@@ -106,12 +106,12 @@
 .finder .right .toolbar .navigation-controls img {
   width: 10px;
   opacity: 0.5;
+  filter: invert(1);
 }
 .finder .right .toolbar .title {
   font-weight: 600;
   font-size: 14px;
   flex: 1;
-  text-align: center;
   margin-right: 60px;
 }
 .finder .right .main-content {
